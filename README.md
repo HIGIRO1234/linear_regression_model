@@ -13,7 +13,7 @@ Rwandan schools and educators to identify at-risk students early and
 provide targeted academic interventions before performance deteriorates.
 
 ## Dataset
-- **Name:** Students Performance Dataset
+- **Name:** Student_performance_data.csv
 - **Source:** [Kaggle]('kaggle.com/datasets/rabieelkharoua/students-performance-dataset')
 - **Description:** The dataset contains 2,392 records of high school 
 students with 15 columns covering demographics, study habits, parental 
