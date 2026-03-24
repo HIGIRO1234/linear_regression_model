@@ -311,7 +311,13 @@ def predict_gpa(student: StudentFeatures):
     except FileNotFoundError as exc:
         raise HTTPException(status_code=503, detail=str(exc))
 
-    features = build_feature_vector(student)
+    try:
+        features = build_feature_vector(student)
+    except Exception as exc:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Feature vector creation failed: {exc}",
+        )
 
     try:
         features_scaled = scaler.transform(features)
@@ -321,8 +327,14 @@ def predict_gpa(student: StudentFeatures):
             detail=f"Feature scaling failed: {exc}",
         )
 
-    prediction = model.predict(features_scaled)[0]
-    predicted_gpa = float(np.clip(prediction, 0.0, 4.0))
+    try:
+        prediction = model.predict(features_scaled)[0]
+        predicted_gpa = float(np.clip(prediction, 0.0, 4.0))
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Model prediction failed: {str(exc)}. Expected {model.n_features_in_} features, got {features_scaled.shape[1]}",
+        )
 
     return PredictionResponse(predicted_gpa=round(predicted_gpa, 4))
 
