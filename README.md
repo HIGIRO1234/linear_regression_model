@@ -151,15 +151,63 @@ Open http://127.0.0.1:8000/docs
 
 ---
 
+## Testing the API Endpoints
+
+### Access Swagger UI (Interactive Documentation)
+🔗 **Live Swagger UI:** [https://linear-regression-model-a55j.onrender.com/docs](https://linear-regression-model-a55j.onrender.com/docs)
+
+From the Swagger UI, you can test all three endpoints:
+
+### 1. **`POST /predict`** — Predict Student GPA
+Test prediction with student data:
+1. Click **`POST /predict`** endpoint
+2. Click **"Try it out"**
+3. Fill in the example request body:
+```json
+{
+  "age": 16,
+  "gender": "male",
+  "study_time_weekly": 15.0,
+  "absences": 3,
+  "tutoring": "yes",
+  "extracurricular": "yes",
+  "sports": "no",
+  "music": "no",
+  "volunteering": "no",
+  "ethnicity": "caucasian",
+  "parental_education": "some college",
+  "parental_support": "high"
+}
+```
+4. Click **"Execute"**
+5. Response: `{"predicted_gpa": 3.54}` (example value)
+
+### 2. **`POST /retrain/default`** — Retrain on Original Dataset
+Reset the model to its baseline:
+1. Click **`POST /retrain/default`** endpoint
+2. Click **"Try it out"** → **"Execute"**
+3. The API fetches the original Kaggle dataset and retrains all 3 models
+4. Response shows performance metrics for each model and saves the best one
+
+### 3. **`POST /retrain`** — Retrain on Custom CSV
+Upload your own dataset:
+1. Click **`POST /retrain`** endpoint
+2. Click **"Try it out"**
+3. Upload a CSV file (must include a `GPA` column)
+4. Click **"Execute"**
+5. Response shows which model performed best on your data
+
+---
+
 ## Flutter Mobile App
 
-### How to Run
+### How to Run with Live API
 
 **Prerequisites**
 - Flutter SDK ≥ 3.10 installed ([flutter.dev](https://flutter.dev/docs/get-started/install))
 - Android emulator, iOS simulator, or a physical device connected
 
-**Steps**
+**For Deployed API (Recommended)**
 ```bash
 # 1. Navigate to the Flutter app
 cd summative/FlutterApp
@@ -167,22 +215,44 @@ cd summative/FlutterApp
 # 2. Install dependencies
 flutter pub get
 
- 3. Set the API URL in lib/services/prediction_service.dart:
-Android emulator  → http://10.0.2.2:8000
-iOS simulator     → http://127.0.0.1:8000
-Physical device   → http://<your-local-ip>:8000
-Render (deployed) → https://linear-regression-model-9gg3.onrender.com
+# 3. The app is already configured to use the live Render API:
+# lib/services/prediction_service.dart uses:
+# const String _baseUrl = 'https://linear-regression-model-a55j.onrender.com';
 
 # 4. Run the app
+flutter run
+```
+
+**For Local Testing (Development)**
+```bash
+# Edit lib/services/prediction_service.dart and change _baseUrl to:
+# Android emulator  → const String _baseUrl = 'http://10.0.2.2:8000';
+# iOS simulator     → const String _baseUrl = 'http://127.0.0.1:8000';
+# Physical device   → const String _baseUrl = 'http://<your-local-ip>:8000';
+
 flutter run
 ```
 
 **App Features**
 - 12 input fields matching all API variables
 - Popup bottom-sheet selectors for categorical fields (Gender, Sports, Music, etc.)
-- **Predict** button triggers the API call
+- **Predict** button triggers the API call to `/predict`
 - Result displayed as a gradient popup showing the predicted GPA (0.0–4.0)
 - Error popup for validation or connection failures
+
+### Testing the App
+1. Fill in student information:
+   - Age: 16
+   - Gender: Male
+   - Study Time Weekly: 15.0 hours
+   - Absences: 3
+   - Tutoring: Yes
+   - Extracurricular: Yes
+   - Other fields as desired
+
+2. Tap **"Predict GPA"** button
+3. App calls `https://linear-regression-model-a55j.onrender.com/predict`
+4. Result shows predicted GPA (e.g., 3.5556)
 
 ---
 
