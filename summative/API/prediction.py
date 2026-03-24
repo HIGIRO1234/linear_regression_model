@@ -302,38 +302,85 @@ def health_check():
     return {"status": "ok", "model_ready": model_ready}
 
 
+@app.get("/test-predict", tags=["Debug"])
+def test_predict():
+    """Test endpoint to verify model loading and prediction without input validation."""
+    try:
+        model = load_model()
+        scaler = load_scaler()
+        
+        # Test with hardcoded values
+        test_features = np.array([[
+            16,  # age
+            1,   # gender (male)
+            15.0,  # study_time_weekly
+            3,   # absences
+            1,   # tutoring (yes)
+            1,   # extracurricular (yes)
+            0,   # sports (no)
+            0,   # music (no)
+            0,   # volunteering (no)
+            1, 0, 0,  # ethnicity OHE (caucasian)
+            1, 0, 0, 0,  # parental_education OHE (bachelors)
+            0, 0, 0, 1,  # parental_support OHE (high)
+        ]])
+        
+        features_scaled = scaler.transform(test_features)
+        prediction = model.predict(features_scaled)[0]
+        predicted_gpa = float(np.clip(prediction, 0.0, 4.0))
+        
+        return {
+            "status": "success",
+            "predicted_gpa": round(predicted_gpa, 4),
+            "model_features": model.n_features_in_,
+            "input_features": test_features.shape[1],
+        }
+    except Exception as exc:
+        import traceback
+        return {
+            "status": "error",
+            "error": str(exc),
+            "traceback": traceback.format_exc(),
+        }
+
+
 @app.post("/predict", response_model=PredictionResponse, tags=["Prediction"])
 def predict_gpa(student: StudentFeatures):
-
     try:
         model = load_model()
         scaler = load_scaler()
     except FileNotFoundError as exc:
         raise HTTPException(status_code=503, detail=str(exc))
+    except Exception as exc:
+        import traceback
+        raise HTTPException(status_code=503, detail=f"Failed to load model: {str(exc)}\n{traceback.format_exc()}")
 
     try:
         features = build_feature_vector(student)
     except Exception as exc:
+        import traceback
         raise HTTPException(
             status_code=422,
-            detail=f"Feature vector creation failed: {exc}",
+            detail=f"Feature vector creation failed: {str(exc)}\n{traceback.format_exc()}",
         )
 
     try:
         features_scaled = scaler.transform(features)
     except Exception as exc:
+        import traceback
         raise HTTPException(
             status_code=422,
-            detail=f"Feature scaling failed: {exc}",
+            detail=f"Feature scaling failed: {str(exc)}\n{traceback.format_exc()}",
         )
 
     try:
         prediction = model.predict(features_scaled)[0]
         predicted_gpa = float(np.clip(prediction, 0.0, 4.0))
     except Exception as exc:
+        import traceback
         raise HTTPException(
             status_code=500,
-            detail=f"Model prediction failed: {str(exc)}. Expected {model.n_features_in_} features, got {features_scaled.shape[1]}",
+            detail=f"Model prediction failed: {str(exc)}. Model expects {model.n_features_in_} features, got {features_scaled.shape[1]}\n{traceback.format_exc()}",
         )
 
     return PredictionResponse(predicted_gpa=round(predicted_gpa, 4))
