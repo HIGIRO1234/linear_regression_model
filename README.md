@@ -259,7 +259,6 @@ flutter run
 ## Video Demo
 **https://www.youtube.com/watch?v=BeKvgEEi-tc**
 
-> Demo covers: mobile app predictions, Swagger UI tests, model explanation, loss curves, and answers to deployment questions.
 
 ---
 
