@@ -1,94 +1,213 @@
 # Student GPA Prediction Model
 
-## Mission and Problem
-In Rwanda and across Africa, schools and educators lack data-driven 
-tools to identify students at risk of poor academic performance before 
-it is too late to intervene effectively. The problem is that without 
-a predictive model, teachers cannot proactively support struggling 
-students leading to high failure rates and increased dropout especially 
-in underserved communities. This project builds a machine learning 
-regression model that predicts student GPA based on study habits, 
-attendance, parental support and extracurricular activities, enabling 
-Rwandan schools and educators to identify at-risk students early and 
-provide targeted academic interventions before performance deteriorates.
+## Mission & Problem
+Schools in Rwanda and across Africa lack data-driven tools to identify students at risk of poor academic performance before it is too late to intervene. This project builds a regression model that predicts a student's GPA from study habits, attendance, parental support, and extracurricular activities — enabling educators to flag struggling students early and provide targeted support before performance deteriorates.
 
 ## Dataset
-- **Name:** Student_performance_data.csv
-- **Source:** [Kaggle]('kaggle.com/datasets/rabieelkharoua/students-performance-dataset')
-- **Description:** The dataset contains 2,392 records of high school 
-students with 15 columns covering demographics, study habits, parental 
-involvement, extracurricular activities and academic performance. 
-The target variable is GPA which represents the student Grade Point 
-Average ranging from 0.0 to 4.0. The dataset includes features such 
-as Age, Gender, Ethnicity, ParentalEducation, StudyTimeWeekly, 
-Absences, Tutoring, ParentalSupport, Extracurricular, Sports, Music 
-and Volunteering making it rich in both volume and variety for 
-regression analysis.
+- **Name:** Students Performance Dataset
+- **Source:** [Kaggle – Rabie El Kharoua](https://www.kaggle.com/datasets/rabieelkharoua/students-performance-dataset)
+- **Size:** 2,392 student records × 15 features (rich in volume and variety)
+- **Target:** GPA (0.0 – 4.0 continuous scale)
+- **Features:** Age, Gender, Ethnicity, ParentalEducation, StudyTimeWeekly, Absences, Tutoring, ParentalSupport, Extracurricular, Sports, Music, Volunteering
 
-## Project Structure
-linear_regression_model/
-│
-├── summative/
-│   ├── linear_regression/
-│   │   └── multivariate.ipynb
-│   ├── API/
-│   └── FlutterApp/
-│
-└── README.md
+---
 
-## Key Findings
-- Absences is the strongest predictor of GPA with a correlation of -0.92
-- More absences = significantly lower GPA confirmed by all three models
-- StudyTimeWeekly and Tutoring are the second and third strongest predictors
-- ParentalSupport shows a clear positive impact on student GPA
+## Visualizations
 
-## Models Used
-- Linear Regression (Ordinary Least Squares)
-- Decision Tree Regressor
-- Random Forest Regressor
+### 1. Correlation Heatmap
+Shows the relationship between all features and GPA. Absences has the strongest negative correlation (−0.92) while StudyTimeWeekly and Tutoring show strong positive correlations.
+
+![Correlation Heatmap](summative/inear_regression/correlation_heatmap.png)
+
+### 2. GPA Distribution
+Shows the spread of student GPA values across the dataset, confirming a near-normal distribution suitable for regression analysis.
+
+![GPA Distribution](summative/inear_regression/gpa_distribution.png)
+
+### 3. Feature vs GPA Scatter Plot
+Visualises how individual features (especially Absences and StudyTimeWeekly) relate to GPA before and after model fitting.
+
+![Feature vs GPA](summative/inear_regression/feature_vs_gpa.png)
+
+### 4. Scatter Plot — Before & After Linear Fit
+Shows raw data points alongside the fitted regression line, demonstrating how well Linear Regression captures the trend.
+
+![Scatter Before & After](summative/inear_regression/scatter_before_after.png)
+
+### 5. Loss Curve (Train vs Test)
+Gradient descent loss curve showing convergence of both training and test loss across iterations.
+
+![Loss Curve](summative/inear_regression/loss_curve.png)
+
+---
 
 ## Model Performance
 
-| Model             | Test MSE | Test MAE | Test R2 |
-|-------------------|----------|----------|---------|
-| Linear Regression | 0.0385   | 0.1551   | 0.9534  |
-| Decision Tree     | 0.1202   | 0.2792   | 0.8547  |
-| Random Forest     | 0.0876   | 0.2342   | 0.8940  |
+| Model             | R² Score | MAE    |
+|-------------------|----------|--------|
+| **Linear Regression** | **0.9534** | **0.1551** |
+| Random Forest     | 0.9146   | 0.2342 |
+| Decision Tree     | 0.8346   | 0.2792 |
 
-## Best Model
-Linear Regression achieved the best overall performance with a Test 
-R2 of 0.9534 which means the model explains 95% of the variance in 
-student GPA. The Train R2 of 0.9542 and Test R2 of 0.9534 are almost 
-identical which confirms the model generalizes perfectly to unseen 
-student data without any overfitting. The model was saved as 
-best_model.pkl and the scaler was saved as scaler.pkl.
+**Best Model: Linear Regression** — saved as `best_model.pkl`
+Linear Regression achieves R² = 0.9534, meaning it explains 95.3% of the variance in student GPA. Train R² (0.9542) ≈ Test R² (0.9534), confirming no overfitting. It outperforms both tree-based models on this dataset because the relationship between features and GPA is largely linear.
 
-## Gradient Descent Results
-- Starting Train Loss : 1.0000
-- Final   Train Loss  : 0.0707
-- Starting Test Loss  : 0.9674
-- Final   Test Loss   : 0.0773
-- Loss Reduction Train: 0.9293
-- Loss Reduction Test : 0.8902
+---
 
-## Dataset Note
-This model was trained on a publicly available dataset from Kaggle 
-since equivalent Rwandan student performance data is not yet publicly 
-available. The same model architecture and approach can be retrained 
-on Rwandan school data once it becomes available, making it directly 
-applicable to the local education context.
+## Project Structure
 
-## How to Run
-1. Clone the repository
-2. Open summative/linear_regression/multivariate.ipynb
-3. Run all cells in order
-4. The best model will be saved automatically as best_model.pkl
+```
+linear_regression_model/
+│
+├── summative/
+│   ├── inear_regression/
+│   │   ├── multivariate.ipynb       ← Training notebook
+│   │   ├── best_model.pkl           ← Saved best model
+│   │   ├── scaler.pkl               ← Fitted StandardScaler
+│   │   └── *.png                    ← Visualisation plots
+│   │
+│   ├── API/
+│   │   ├── prediction.py            ← FastAPI app
+│   │   └── requirements.txt         ← API dependencies
+│   │
+│   └── FlutterApp/                  ← Flutter mobile app
+│       └── lib/
+│           ├── main.dart
+│           ├── screens/
+│           │   └── prediction_screen.dart
+│           └── services/
+│               └── prediction_service.dart
+│
+└── README.md
+```
+
+---
+
+## API
+
+### Public Endpoint
+> **Base URL:** `https://linear-regression-model-9gg3.onrender.com`
+
+| Route | Method | Description |
+|---|---|---|
+| `/` | GET | Health check |
+| `/health` | GET | Model readiness check |
+| `/predict` | POST | Predict student GPA |
+| `/retrain` | POST | Retrain with uploaded CSV |
+| `/retrain/default` | POST | Retrain with original dataset |
+
+### Swagger UI (Live Docs)
+🔗 **[https://linear-regression-model-9gg3.onrender.com/docs](https://linear-regression-model-9gg3.onrender.com/docs)**
+
+### Sample Request Body (`POST /predict`)
+```json
+{
+  "age": 16,
+  "gender": "male",
+  "study_time_weekly": 15.0,
+  "absences": 3,
+  "tutoring": "yes",
+  "extracurricular": "yes",
+  "sports": "no",
+  "music": "no",
+  "volunteering": "no",
+  "ethnicity": "caucasian",
+  "parental_education": "some college",
+  "parental_support": "high"
+}
+```
+
+### Sample Response
+```json
+{
+  "predicted_gpa": 3.54
+}
+```
+
+### CORS Configuration
+CORS is configured with explicit (non-wildcard) allowed origins, methods, headers, and credentials — not a generic `allow *`:
+```python
+allow_origins=["http://localhost:3000", "http://localhost:8080", "https://student-gpa-predictor.onrender.com"],
+allow_credentials=True,
+allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+allow_headers=["Content-Type", "Authorization", "Accept", "X-Requested-With"]
+```
+
+### Model Retraining
+The API supports two retraining endpoints:
+- **`POST /retrain/default`** — retrains all three models on the original Kaggle dataset and saves the best one
+- **`POST /retrain`** — accepts a new CSV upload, retrains on it, and saves the best model automatically
+
+---
+
+## Running the API Locally
+
+```bash
+cd summative/API
+pip install -r requirements.txt
+uvicorn prediction:app --reload --host 0.0.0.0 --port 8000
+# Open http://127.0.0.1:8000/docs
+```
+
+---
+
+## Flutter Mobile App
+
+### How to Run
+
+**Prerequisites**
+- Flutter SDK ≥ 3.10 installed ([flutter.dev](https://flutter.dev/docs/get-started/install))
+- Android emulator, iOS simulator, or a physical device connected
+
+**Steps**
+```bash
+# 1. Navigate to the Flutter app
+cd summative/FlutterApp
+
+# 2. Install dependencies
+flutter pub get
+
+# 3. Set the API URL in lib/services/prediction_service.dart:
+#    Android emulator  → http://10.0.2.2:8000
+#    iOS simulator     → http://127.0.0.1:8000
+#    Physical device   → http://<your-local-ip>:8000
+#    Render (deployed) → https://linear-regression-model-9gg3.onrender.com
+
+# 4. Run the app
+flutter run
+```
+
+**App Features**
+- 12 input fields matching all API variables
+- Popup bottom-sheet selectors for categorical fields (Gender, Sports, Music, etc.)
+- **Predict** button triggers the API call
+- Result displayed as a gradient popup showing the predicted GPA (0.0–4.0)
+- Error popup for validation or connection failures
+
+---
+
+## Video Demo
+🎬 **[YouTube Demo Link – add your link here]**
+
+> Demo covers: mobile app predictions, Swagger UI tests, model explanation, loss curves, and answers to deployment questions.
+
+---
 
 ## Requirements
-- Python 3.x
-- pandas
-- numpy
-- matplotlib
-- seaborn
-- scikit-learn
-- joblib
+
+**API (`summative/API/requirements.txt`)**
+```
+fastapi
+uvicorn
+pydantic
+scikit-learn
+pandas
+numpy
+joblib
+python-multipart
+```
+
+**Notebook**
+```
+pandas, numpy, matplotlib, seaborn, scikit-learn, joblib
+```
