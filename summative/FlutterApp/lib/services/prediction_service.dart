@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 // iOS simulator     → http://127.0.0.1:8000
 // Physical device   → http://192.168.1.74:8000  (your Mac's current local IP)
 // Render (deployed) → https://linear-regression-model-9gg3.onrender.com
-const String _baseUrl = 'http://192.168.1.74:8000';
+const String _baseUrl = 'https://linear-regression-model-a55j.onrender.com';
 
 // ── Input model matching the API body exactly ─────────────────────────────────
 class StudentInput {
