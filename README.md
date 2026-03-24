@@ -146,7 +146,7 @@ The API supports two retraining endpoints:
 cd summative/API
 pip install -r requirements.txt
 uvicorn prediction:app --reload --host 0.0.0.0 --port 8000
-# Open http://127.0.0.1:8000/docs
+Open http://127.0.0.1:8000/docs
 ```
 
 ---
@@ -167,11 +167,11 @@ cd summative/FlutterApp
 # 2. Install dependencies
 flutter pub get
 
-# 3. Set the API URL in lib/services/prediction_service.dart:
-#    Android emulator  → http://10.0.2.2:8000
-#    iOS simulator     → http://127.0.0.1:8000
-#    Physical device   → http://<your-local-ip>:8000
-#    Render (deployed) → https://linear-regression-model-9gg3.onrender.com
+ 3. Set the API URL in lib/services/prediction_service.dart:
+Android emulator  → http://10.0.2.2:8000
+iOS simulator     → http://127.0.0.1:8000
+Physical device   → http://<your-local-ip>:8000
+Render (deployed) → https://linear-regression-model-9gg3.onrender.com
 
 # 4. Run the app
 flutter run
