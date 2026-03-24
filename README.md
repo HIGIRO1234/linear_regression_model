@@ -86,7 +86,7 @@ linear_regression_model/
 ## API
 
 ### Public Endpoint
-> **Base URL:** `https://linear-regression-model-9gg3.onrender.com`
+> **Base URL:** `https://linear-regression-model-a55j.onrender.com`
 
 | Route | Method | Description |
 |---|---|---|
@@ -97,7 +97,7 @@ linear_regression_model/
 | `/retrain/default` | POST | Retrain with original dataset |
 
 ### Swagger UI (Live Docs)
-🔗 **[https://linear-regression-model-9gg3.onrender.com/docs](https://linear-regression-model-9gg3.onrender.com/docs)**
+🔗 **[https://linear-regression-model-a55j.onrender.com/docs](https://linear-regression-model-a55j.onrender.com/docs)**
 
 ### Sample Request Body (`POST /predict`)
 ```json
